@@ -25,7 +25,11 @@ test("it calls onUserAdd when the form is submitted", () => {
   render(<UserForm onUserAdd={/*callback*/ mock} />);
 
   // Find two inputs
-  const [nameInput, emailInput] = screen.getAllByRole("textbox");
+  // const [nameInput, emailInput] = screen.getAllByRole("textbox");
+  // const nameInput = screen.getByTestId("name"); // need to set  data-testid attribute
+  // const emailInput = screen.getByTestId("email"); // need to set  data-testid attribute
+  const nameInput = screen.getByRole("textbox", { name: /name/i }); // i to make it case insensitive
+  const emailInput = screen.getByRole("textbox", { name: /email/i });
 
   // Simulate name and email input
   user.click(nameInput); // To focus on this input
