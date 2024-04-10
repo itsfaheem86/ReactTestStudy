@@ -1,10 +1,17 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import UserList from "./UserList";
+
+function renderComponent() {
+  const users = [{ name: "udev", email: "jstrfaheem065@gmail.com" }];
+  const renderResults = render(<UserList users={users} />);
+
+  return { users, renderResults };
+}
 
 test("render one row pre user", () => {
   // Render the component
-  const users = [{ name: "udev", email: "jstrfaheem065@gmail.com" }];
-  const { container } = render(<UserList users={users} />);
+  const { renderResults } = renderComponent();
+  const { container } = renderResults;
   // screen.logTestingPlaygroundURL(); // To see the render
   // Find all the rows in the table
   // Problem
@@ -17,4 +24,12 @@ test("render one row pre user", () => {
   expect(rows).toHaveLength(1);
 });
 
-test("render the email and name of each user", () => {});
+test("render the email and name of each user", () => {
+  const { users } = renderComponent();
+  for (let user of users) {
+    const name = screen.getByRole("cell", { name: user.name });
+    const email = screen.getByRole("cell", { name: user.email });
+    expect(name).toBeInTheDocument();
+    expect(email).toBeInTheDocument();
+  }
+});
