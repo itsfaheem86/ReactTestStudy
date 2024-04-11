@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import user from "@testing-library/user-event";
 import UserForm from "./UserForm";
+import { act } from "react-dom/test-utils";
 
 test("it shows two inputs and a button", () => {
   // Render the component
@@ -31,16 +32,18 @@ test("it calls onUserAdd when the form is submitted", () => {
   const nameInput = screen.getByRole("textbox", { name: /name/i }); // i to make it case insensitive
   const emailInput = screen.getByRole("textbox", { name: /email/i });
 
-  // Simulate name and email input
-  user.click(nameInput); // To focus on this input
-  user.keyboard("udev");
-  user.click(emailInput);
-  user.keyboard("jstrfaheem065@gmail.com");
+  act(() => {
+    // Simulate name and email input
+    user.click(nameInput); // To focus on this input
+    user.keyboard("udev");
+    user.click(emailInput);
+    user.keyboard("jstrfaheem065@gmail.com");
 
-  // Find the button in the form
-  const button = screen.getByRole("button");
-  // Click button
-  user.click(button);
+    // Find the button in the form
+    const button = screen.getByRole("button");
+    // Click button
+    user.click(button);
+  });
 
   // Assert
   // expect(argList).toHaveLength(1);
@@ -53,4 +56,22 @@ test("it calls onUserAdd when the form is submitted", () => {
     name: "udev",
     email: "jstrfaheem065@gmail.com",
   });
+});
+
+test("it empties two inputs when form submitted", () => {
+  const mock = jest.fn();
+  render(<UserForm onUserAdd={mock} />);
+  const nameInput = screen.getByRole("textbox", { name: /name/i });
+  const emailInput = screen.getByRole("textbox", { name: /email/i });
+  const button = screen.getByRole("button");
+  act(() => {
+    user.click(nameInput);
+    user.keyboard("udev");
+    user.click(emailInput);
+    user.keyboard("jstrfaheem065@gmail.com");
+    user.click(button);
+  });
+
+  expect(nameInput).toHaveValue("");
+  expect(emailInput).toHaveValue("");
 });
