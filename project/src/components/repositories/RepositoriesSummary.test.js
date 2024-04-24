@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import RepositoriesSummary from "./RepositoriesSummary";
 
-test("displays the primary language of the repository", () => {
+test("display information about the repository", () => {
   const repository = {
     language: "Javascript",
     stargazers_count: 5,
@@ -9,6 +9,9 @@ test("displays the primary language of the repository", () => {
     forks: 30,
   };
   render(<RepositoriesSummary repository={repository} />);
-  const language = screen.getByText(repository.language);
-  expect(language).toBeInTheDocument();
+
+  Object.values(repository).forEach((value) => {
+    const valueText = screen.getByText(new RegExp(value)); // If we don't give regex, it will try to get exact value
+    expect(valueText).toBeInTheDocument();
+  });
 });
