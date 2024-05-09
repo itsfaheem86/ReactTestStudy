@@ -2,6 +2,13 @@ import { render, screen } from "@testing-library/react";
 import RepositoriesListItem from "./RepositoriesListItem";
 import { MemoryRouter } from "react-router-dom";
 
+// Method 2: I don't want to render FileIcon, So I am mocking it
+jest.mock("../tree/FileIcon", () => {
+  return () => {
+    return "FileIcon alternative component!";
+  };
+});
+
 // act is written in pure jest but react uses it under the hood which means
 // we need to use waitFor, screen.finBy/findAllBy, user.keyboard, user.click
 function renderComponent() {
@@ -28,11 +35,13 @@ function renderComponent() {
 
 test("show a link to the github homepage for this repository", async () => {
   const { repository } = renderComponent();
+
+  // Method : 1 wait for FileIcon to render
   // screen.debug();
   // await pause();
   // screen.debug();
   // We should wait for FileIcon to render the image with aria label language and the class
-  await screen.findByRole("img", { name: repository.language });
+  // await screen.findByRole("img", { name: repository.language });
 });
 
 // To simulates a delay
