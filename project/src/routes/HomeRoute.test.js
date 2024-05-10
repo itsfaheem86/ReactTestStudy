@@ -1,8 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { rest } from "msw";
-import { setupServer } from "msw/node";
 import HomeRoute from "./HomeRoute";
 import { MemoryRouter } from "react-router";
+import { createServer } from "../test/server";
 
 const getItems = (language) => {
   const items = [
@@ -17,28 +16,18 @@ const getItems = (language) => {
   ];
   return items;
 };
-const handlers = [
-  rest.get("/api/repositories", (req, res, ctx) => {
-    const language = req.url.searchParams.get("q").split("language:")?.[1];
-    return res(
-      ctx.json({
+
+createServer([
+  {
+    path: "/api/repositories",
+    res: (req) => {
+      const language = req.url.searchParams.get("q").split("language:")[1];
+      return {
         items: getItems(language),
-      })
-    );
-  }),
-];
-
-const server = setupServer(...handlers);
-
-beforeAll(() => {
-  server.listen();
-});
-afterEach(() => {
-  server.resetHandlers();
-});
-afterAll(() => {
-  server.close();
-});
+      };
+    },
+  },
+]);
 
 test("renders links for each language", async () => {
   render(
