@@ -1,0 +1,8 @@
+# To debug
+"test:debug": "react-scripts --inspect-brk test --runInBand --no-cache"
+about:inspect
+-> If not listed I have to add the ip address inside about:inspect
+
+# How do you debug Jest Tests?
+-> https://stackoverflow.com/questions/33247602/how-do-you-debug-jest-tests
+npx ndb npm run test
